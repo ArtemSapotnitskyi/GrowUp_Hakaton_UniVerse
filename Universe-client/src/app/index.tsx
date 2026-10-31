@@ -2,7 +2,7 @@ import { View, Text, ActivityIndicator } from "react-native";
 import { Redirect } from "expo-router";
 
 export default function AppEntry() {
-  const isAuth = true;
+  const isAuth = false;
   const isReady = true;
 
   if (!isReady) {
