@@ -6,11 +6,13 @@ import {
   StyleSheet,
   FlatList,
   TextInput,
+  Image,
 } from "react-native";
 import { UNIVERSITIES } from "../data/seed";
 import UniCard from "../components/UniCard";
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
+import Button from "@/components/ui/Button/Button";
 
 export function StartScreen() {
   const [selectedUniId, setSelectedUniId] = useState<string | null>(null);
@@ -29,35 +31,43 @@ export function StartScreen() {
   };
 
   return (
-    <View style={style.root}>
+    <View style={styles.root}>
       {/* Header */}
-      <View style={style.headerContainer}>
-        <Text style={style.appLogoText}>UniVerse</Text>
-        <Text style={style.mainTitle}>Select Your University</Text>
-        <Text style={style.subTitle}>
+      <View style={styles.headerContainer}>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require("../../../../assets/images/LogosUnis/Main_logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+            accessibilityLabel="UniVerse App Logo"
+          />
+          <Text style={styles.appLogoText}>UniVerse</Text>
+        </View>
+        <Text style={styles.mainTitle}>Select Your University</Text>
+        <Text style={styles.subTitle}>
           Find and connect your academic institution to access services.
         </Text>
       </View>
 
       {/* Univer List */}
-      <View style={style.listContainer}>
-        <View style={style.designContainer}>
-          <View style={style.searchRow}>
-            <View style={style.searchInputContainer}>
+      <View style={styles.listContainer}>
+        <View style={styles.designContainer}>
+          <View style={styles.searchRow}>
+            <View style={styles.searchInputContainer}>
               <Feather
                 name="search"
                 size={20}
                 color="#00478F"
-                style={style.searchIcon}
+                style={styles.searchIcon}
               />
               <TextInput
-                style={style.searchInput}
+                style={styles.searchInput}
                 placeholder="Search for university or city..."
                 placeholderTextColor="#A1A1AA"
               />
             </View>
             <TouchableOpacity>
-              <Text style={style.cancelText}>Cancel</Text>
+              <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>
 
@@ -80,17 +90,12 @@ export function StartScreen() {
         </View>
       </View>
 
-      <TouchableOpacity
-        style={[style.continueBtn, isBtnActive && style.continueBtnActive]}
-        onPress={handleContinue}
-        activeOpacity={0.8}
-        disabled={!isBtnActive}
-      >
-        <Text style={style.continueBtnText}>Continue</Text>
-      </TouchableOpacity>
+      <Button disabled={!isBtnActive} onPress={handleContinue}>
+        Continue
+      </Button>
 
-      <TouchableOpacity style={style.footerLink}>
-        <Text style={style.footerLinkText}>
+      <TouchableOpacity style={styles.footerLink}>
+        <Text style={styles.footerLinkText}>
           Can't find your university? Suggest it.
         </Text>
       </TouchableOpacity>
@@ -98,11 +103,11 @@ export function StartScreen() {
   );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   root: {
     flex: 1,
-    marginTop: 80,
-    marginHorizontal: 18,
+    marginTop: 65,
+    marginHorizontal: 25,
     backgroundColor: "#F4F2EE",
     paddingBottom: 30,
   },
@@ -114,24 +119,37 @@ const style = StyleSheet.create({
   },
   headerContainer: {
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: 15,
+  },
+  logoContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  logo: {
+    width: 44,
+    height: 44,
+    marginBottom: 8,
   },
   appLogoText: {
-    fontSize: 20,
+    fontSize: 24,
+    fontFamily: "Onest_600SemiBold",
     fontWeight: "600",
-    color: "#3F3F46",
+    color: "#3F3F3F",
     marginBottom: 12,
   },
   mainTitle: {
-    fontSize: 28,
+    fontSize: 30,
+    fontFamily: "Georama_800ExtraBold",
     fontWeight: "800",
-    color: "#3F3F46",
+    color: "#3F3F3F",
     textAlign: "center",
     marginBottom: 8,
   },
   subTitle: {
-    fontSize: 16,
-    color: "#71717A",
+    fontSize: 18,
+    fontFamily: "Onest_700Bold",
+    color: "#828282",
     textAlign: "center",
     paddingHorizontal: 20,
   },
@@ -180,7 +198,8 @@ const style = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
+    fontFamily: "Onest_700Bold",
     color: "#3F3F46",
   },
   cancelText: {
@@ -188,37 +207,13 @@ const style = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
-  continueBtn: {
-    backgroundColor: "#A1A1AA",
-    borderRadius: 13,
-    height: 52,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#FFFFFF",
-  },
-  continueBtnActive: {
-    backgroundColor: "#003C7D",
-    borderWidth: 1,
-    borderColor: "#fff",
-    shadowColor: "#003C7D",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  continueBtnText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
-  },
   footerLink: {
     alignItems: "center",
   },
   footerLinkText: {
     color: "#71717A",
     fontSize: 14,
+    fontFamily: "Onest_600SemiBold",
     textDecorationLine: "underline",
     fontWeight: "500",
   },

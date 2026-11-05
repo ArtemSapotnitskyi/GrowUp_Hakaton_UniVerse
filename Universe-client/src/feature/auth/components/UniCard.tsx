@@ -47,6 +47,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     padding: 5,
+    borderTopWidth: 1,
+    borderTopColor: "#F1F1F1",
   },
   logoContainer: {
     width: 56,
@@ -60,7 +62,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   name: {
-    fontSize: 14,
+    fontSize: 13,
+    fontFamily: "Onest_700Bold",
     fontWeight: "700",
     color: "#1C1C1E",
     marginBottom: 2,
@@ -71,6 +74,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 12,
+    fontFamily: "Onest_400Regular",
     color: "#8E8E93",
   },
   iconOpacity: {
