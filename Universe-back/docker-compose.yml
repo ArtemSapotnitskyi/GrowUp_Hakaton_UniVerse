@@ -31,7 +31,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=UniverseDb;Username=postgres;Password=${POSTGRES_PASSWORD:-postgres};Pooling=true;Minimum Pool Size=2;Maximum Pool Size=20"
-      Jwt__Key: ${Jwt__Key:-UniVerse_Dev_Docker_Fallback_Key_Min_32_Chars!}
+      Jwt__Key: ${Jwt__Key:-pHnoPr0kZvclCDo6BOxEoid6u9UChQ/BLunOJECxOoLYdYX2F7AZFUQr2mZPPBxa}
       Jwt__Issuer: ${Jwt__Issuer:-UniVerseApi}
       Jwt__Audience: ${Jwt__Audience:-UniVerseApp}
       Jwt__AccessTokenMinutes: ${Jwt__AccessTokenMinutes:-15}
