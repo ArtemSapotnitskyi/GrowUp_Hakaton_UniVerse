@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Universe.Api.Models.Users;
@@ -11,15 +12,21 @@ public class JwtService : IJwtService
 {
     private readonly IConfiguration _config;
 
+    public int RefreshTokenDays =>
+        int.TryParse(_config["Jwt:RefreshTokenDays"], out var days) ? days : 30;
+
+    private int AccessTokenMinutes =>
+        int.TryParse(_config["Jwt:AccessTokenMinutes"], out var minutes) ? minutes : 15;
+
     public JwtService(IConfiguration config)
     {
         _config = config;
     }
 
-    public string GenerateToken(User user)
+    public (string Token, DateTime ExpiresAt) GenerateAccessToken(User user)
     {
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+        var expiresAt = DateTime.UtcNow.AddMinutes(AccessTokenMinutes);
 
         var claims = new List<Claim>
         {
@@ -39,10 +46,22 @@ public class JwtService : IJwtService
             issuer: _config["Jwt:Issuer"],
             audience: _config["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(7),
+            expires: expiresAt,
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return (new JwtSecurityTokenHandler().WriteToken(token), expiresAt);
+    }
+
+    public string GenerateRefreshToken()
+    {
+        var randomBytes = RandomNumberGenerator.GetBytes(64);
+        return Convert.ToBase64String(randomBytes);
+    }
+
+    public string HashToken(string token)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
+        return Convert.ToHexString(bytes);
     }
 }

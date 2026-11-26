@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: universe-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: UniverseDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5433:5432"
+    volumes:
+      - universe_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d UniverseDb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: universe-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5032:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=UniverseDb;Username=postgres;Password=${POSTGRES_PASSWORD:-postgres};Pooling=true;Minimum Pool Size=2;Maximum Pool Size=20"
+      Jwt__Key: ${Jwt__Key:-UniVerse_Dev_Docker_Fallback_Key_Min_32_Chars!}
+      Jwt__Issuer: ${Jwt__Issuer:-UniVerseApi}
+      Jwt__Audience: ${Jwt__Audience:-UniVerseApp}
+      Jwt__AccessTokenMinutes: ${Jwt__AccessTokenMinutes:-15}
+      Jwt__RefreshTokenDays: ${Jwt__RefreshTokenDays:-30}
+
+volumes:
+  universe_pgdata:

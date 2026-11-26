@@ -24,6 +24,22 @@ public class AuthController : BaseApiController
         return Ok(data);
     }
 
+    [HttpPost("refresh")]
+    public async Task<ActionResult<AuthResponse>> Refresh(RefreshTokenRequest request)
+    {
+        var (success, data, error) = await _authService.RefreshAsync(request.RefreshToken);
+        if (!success) return Unauthorized(new { message = error });
+
+        return Ok(data);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(RefreshTokenRequest request)
+    {
+        await _authService.LogoutAsync(request.RefreshToken);
+        return NoContent();
+    }
+
     [Authorize]
     [HttpGet("me")]
     public async Task<ActionResult<UserProfileResponse>> GetMe()

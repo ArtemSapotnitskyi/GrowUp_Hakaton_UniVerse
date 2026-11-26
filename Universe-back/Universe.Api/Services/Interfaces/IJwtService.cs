@@ -4,5 +4,8 @@ namespace Universe.Api.Services.Interfaces;
 
 public interface IJwtService
 {
-    string GenerateToken(User user);
+    (string Token, DateTime ExpiresAt) GenerateAccessToken(User user);
+    string GenerateRefreshToken();
+    string HashToken(string token);
+    int RefreshTokenDays { get; }
 }

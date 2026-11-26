@@ -13,6 +13,7 @@ public partial class UniverseDbContext : DbContext
     public DbSet<University> Universities => Set<University>();
     public DbSet<User> Users => Set<User>();
     public DbSet<CoinTransaction> CoinTransactions => Set<CoinTransaction>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,6 +26,15 @@ public partial class UniverseDbContext : DbContext
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => u.Login).IsUnique();
             entity.Property(u => u.Role).HasConversion<string>();
+        });
+
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasIndex(rt => rt.TokenHash).IsUnique();
+            entity.HasOne(rt => rt.User)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
         });
     }
 

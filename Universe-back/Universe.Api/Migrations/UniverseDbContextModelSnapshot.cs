@@ -98,6 +98,41 @@ namespace Universe.Api.Migrations
                     b.ToTable("Universities");
                 });
 
+            modelBuilder.Entity("Universe.Api.Models.Users.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Universe.Api.Models.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -182,6 +217,17 @@ namespace Universe.Api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Universe.Api.Models.Users.RefreshToken", b =>
+                {
+                    b.HasOne("Universe.Api.Models.Users.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Universe.Api.Models.Users.User", b =>
                 {
                     b.HasOne("Universe.Api.Models.Universities.University", "University")
@@ -198,6 +244,8 @@ namespace Universe.Api.Migrations
 
             modelBuilder.Entity("Universe.Api.Models.Users.User", b =>
                 {
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618

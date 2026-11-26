@@ -26,4 +26,5 @@ public class User : BaseEntity
     public bool IsLeaderboardJoined { get; set; } = false;
 
     public ICollection<CoinTransaction> Transactions { get; set; } = new List<CoinTransaction>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }
